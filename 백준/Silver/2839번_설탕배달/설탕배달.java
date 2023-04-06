@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package algorithm;
 
 import java.util.Scanner;
@@ -20,26 +19,4 @@ public class Sugar {
 
     }
 }
-=======
-package algorithm;
 
-import java.util.Scanner;
-
-public class Sugar {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int a = sc.nextInt();
-
-        if(a == 4 || a == 7){
-            System.out.println(-1);
-        } else if (a% 5 ==0) {
-            System.out.println(a/5);
-        } else if (a% 5 ==1 || a% 5 ==3) {
-            System.out.println(a/5 + 1);
-        } else if (a% 5 ==2 || a%5 == 4) {
-            System.out.println(a/5 + 2);
-        }
-
-    }
-}
->>>>>>> d73d9128ac2a22340d059304c9bf0cd0315c1aa9
