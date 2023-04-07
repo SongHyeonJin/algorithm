@@ -6,8 +6,7 @@ class Solution {
             for(int j=1; j<=i; j++){
                if(i%j==0) num++; 
             }
-            if(num%2==0) answer +=i;
-            else answer -= i;
+            answer = num%2==0 ? answer+i : answer-i;
         }
         return answer;
     }
