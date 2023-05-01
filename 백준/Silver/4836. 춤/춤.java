@@ -20,10 +20,10 @@ public class Main {
             // 규칙 1
             for(int i=0; i<list.size(); i++){
                 if(list.get(i).equals("dip")){
-                    if( !(i >= 2 && list.get(i-2).equals("jiggle"))
-                    && !(i >= 1 && list.get(i-1).equals("jiggle"))
-                    && !(i+1 <= list.size()-1 &&  list.get(i+1).equals("twirl"))){
-                        list.set(i, "DIP"); // 1번 규칙 어긋난 dip는 대문자 출력
+                    if( !(i >= 2 && list.get(i-2).equals("jiggle")) 
+                    && !(i >= 1 &&list.get(i-1).equals("jiggle")) 
+                    && !( i+1 <= list.size()-1 && list.get(i+1).equals("twirl"))){
+                        list.set(i, "DIP");
                         errorList.add("1");
                         break;
                     }
@@ -74,8 +74,8 @@ public class Main {
                     }
                     break;
             }
-            for(String dance : list){
-                sb.append(dance).append(" ");
+            for (String s : list) {
+                sb.append(s).append(" ");
             }
             System.out.println(sb);
         }
