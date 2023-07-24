@@ -10,16 +10,18 @@ public class Main {
 
         String string = br.readLine();
         String bomb = br.readLine();
+        int string_len = string.length();
+        int bomb_len = bomb.length();
         Stack<Character> stack = new Stack<>();
 
-        for(int i=0; i<string.length(); i++){
+        for(int i=0; i<string_len; i++){
             int count = 0;
             stack.push(string.charAt(i));
             if(stack.size() >= bomb.length()){
-                for(int j=0; j<bomb.length(); j++){
-                    if(stack.get(stack.size() - bomb.length() + j) == bomb.charAt(j)) count++;
-                    if(bomb.length() == count){
-                        for(int k=0; k<bomb.length(); k++){
+                for(int j=0; j<bomb_len; j++){
+                    if(stack.get(stack.size() - bomb_len + j) == bomb.charAt(j)) count++;
+                    if(bomb_len == count){
+                        for(int k=0; k<bomb_len; k++){
                             stack.pop();
                         }
                     }
