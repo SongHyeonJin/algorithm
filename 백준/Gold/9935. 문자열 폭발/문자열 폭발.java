@@ -17,7 +17,7 @@ public class Main {
         for(int i=0; i<string_len; i++){
             int count = 0;
             stack.push(string.charAt(i));
-            if(stack.size() >= bomb.length()){
+            if(stack.size() >= bomb_len){
                 for(int j=0; j<bomb_len; j++){
                     if(stack.get(stack.size() - bomb_len + j) == bomb.charAt(j)) count++;
                     if(bomb_len == count){
