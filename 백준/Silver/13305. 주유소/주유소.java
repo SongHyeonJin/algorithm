@@ -5,25 +5,25 @@ import java.util.StringTokenizer;
 
 public class Main {
     static int N;
-    static int[] distance, price;
+    static long[] distance, price;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
         N = Integer.parseInt(br.readLine());
-        distance = new int[N-1];
-        price = new int[N];
+        distance = new long[N-1];
+        price = new long[N];
         st = new StringTokenizer(br.readLine());
         for(int i=0; i<N-1; i++){
-            distance[i] = Integer.parseInt(st.nextToken());
+            distance[i] = Long.parseLong(st.nextToken());
         }
         st = new StringTokenizer(br.readLine());
         for(int i=0; i<N; i++){
-            price[i] = Integer.parseInt(st.nextToken());
+            price[i] = Long.parseLong(st.nextToken());
         }
 
         int sum = 0;
-        int min = price[0];
+        long min = price[0];
         for(int i=0; i<N-1; i++){
             if(price[i] < min) min = price[i];
             sum += (min * distance[i]);
