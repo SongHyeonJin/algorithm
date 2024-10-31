@@ -5,16 +5,16 @@ import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        BufferedReader br=  new BufferedReader(new InputStreamReader(System.in));
-
-        int x = Integer.parseInt(br.readLine());
-        int count = 0;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
         StringTokenizer st = new StringTokenizer(br.readLine());
-        for(int i=0; i<x; i++){
+        int count = 0;
+
+        for (int i = 0; i < n; i++) {
             int num = Integer.parseInt(st.nextToken());
-            for(int j=2; j<=num; j++){
+            for (int j = 2; j <= num; j++) {
                 if(j==num) count++;
-                if(num%j==0)break;
+                if (num%j==0) break;
             }
         }
         System.out.println(count);
