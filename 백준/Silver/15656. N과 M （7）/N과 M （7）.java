@@ -6,37 +6,35 @@ import java.util.StringTokenizer;
 
 public class Main {
     static int n, m;
-    static boolean[] visited;
-    static int[] arr, input;
+    static int[] arr, result;
     static StringBuilder sb = new StringBuilder();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
 
-        visited = new boolean[m];
         arr = new int[m];
-        input = new int[n];
+        result = new int[n];
         st = new StringTokenizer(br.readLine());
-        for(int i=0; i<n; i++){
-            input[i] = Integer.parseInt(st.nextToken());
-        }
-        Arrays.sort(input);
-        dfs(0, 0);
+        for (int i=0; i<n; i++)
+            result[i] = Integer.parseInt(st.nextToken());
+        Arrays.sort(result);
+        recur(0);
         System.out.println(sb);
     }
-    static void dfs(int depth, int start){
-        if(depth == m){
-            for(int i=0; i<m; i++){
-                sb.append(arr[i]).append(" ");
-            }
+
+    static void recur(int num){
+        if (num == m){
+            for (int val : arr)
+                sb.append(val).append(" ");
             sb.append("\n");
             return;
         }
-        for(int i=0; i<n; i++){
-            arr[depth] = input[i];
-            dfs(depth+1, i+1);
+        for (int i=0; i<n; i++){
+            arr[num] = result[i];
+            recur(num+1);
         }
     }
 }
