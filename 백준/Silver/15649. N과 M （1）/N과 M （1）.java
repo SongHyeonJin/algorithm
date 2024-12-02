@@ -4,35 +4,35 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int N, M;
-    static boolean[] visited;
+    static int n, m;
     static int[] arr;
+    static boolean[] visited;
     static StringBuilder sb = new StringBuilder();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
 
-        visited = new boolean[N];
-        arr = new int[M];
-        dfs(0);
+        arr = new int[m];
+        visited = new boolean[n];
+        recur(0);
         System.out.println(sb);
     }
-    static void dfs(int depth){
-        if(depth == M){
-            for(int val : arr){
+
+    static void recur(int num){
+        if (num == m){
+            for (int val : arr)
                 sb.append(val).append(" ");
-            }
             sb.append("\n");
             return;
         }
-        for(int i=0; i<N; i++){
+        for (int i=0; i<n; i++){
             if(!visited[i]){
                 visited[i] = true;
-                arr[depth] = i + 1;
-                dfs(depth + 1);
+                arr[num] = i+1;
+                recur(num+1);
                 visited[i] = false;
             }
         }
