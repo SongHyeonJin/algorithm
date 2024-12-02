@@ -12,34 +12,33 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
 
-        visited = new boolean[n];
-        arr = new int[n];
+        arr = new int[m];
         result = new int[n];
-
-        st = new StringTokenizer(br.readLine());
-        for(int i=0; i<n; i++){
-            arr[i] = Integer.parseInt(st.nextToken());
-        }
-        Arrays.sort(arr);
-        dfs(0);
+        visited = new boolean[n];
+         st = new StringTokenizer(br.readLine());
+        for (int i=0; i<n; i++)
+            result[i] = Integer.parseInt(st.nextToken());
+        Arrays.sort(result);
+        recur(0);
         System.out.println(sb);
     }
-    static void dfs(int depth){
-        if(depth == m){
-            for(int i=0; i<m; i++){
-                sb.append(result[i]).append(" ");
-            }
+
+    static void recur(int num){
+        if (num == m){
+            for (int val : arr)
+                sb.append(val).append(" ");
             sb.append("\n");
             return;
         }
-        for(int i=0; i<n; i++){
+        for (int i=0; i<n; i++){
             if(!visited[i]){
                 visited[i] = true;
-                result[depth] = arr[i];
-                dfs(depth+1);
+                arr[num] = result[i];
+                recur(num+1);
                 visited[i] = false;
             }
         }
