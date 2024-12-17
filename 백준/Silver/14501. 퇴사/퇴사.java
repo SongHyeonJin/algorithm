@@ -6,6 +6,7 @@ import java.util.StringTokenizer;
 public class Main {
     static int n, answer = Integer.MIN_VALUE;
     static int[][] interview;
+    static int[] dp;
     static boolean[] visited;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -13,6 +14,7 @@ public class Main {
 
         n = Integer.parseInt(br.readLine());
         interview = new int[n][2];
+        dp = new int[n+1];
         visited = new boolean[n];
         for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
@@ -22,15 +24,16 @@ public class Main {
         dfs(0, 0);
         System.out.println(answer);
     }
-    static void dfs(int idx, int price){
+    static int dfs(int idx, int price){
         if (idx == n){
             answer = Math.max(answer, price);
-            return;
+            return 0;
         }
-        if (idx > n-1) return;
+        if (idx > n-1) return 0;
         visited[idx] = true;
-        dfs(idx+ interview[idx][0], price+ interview[idx][1]);
+        dp[idx] = Math.max(dfs(idx+ interview[idx][0], price+ interview[idx][1]),
+                dfs(idx+1, price));
         visited[idx] = false;
-        dfs(idx+1, price);
+        return dp[idx];
     }
 }
