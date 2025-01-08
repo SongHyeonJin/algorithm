@@ -6,43 +6,40 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int comCnt, netCnt;
-    static int[][] computer;
-    static boolean[] check;
-    static int cnt;
+    static int n, m, cnt;
+    static int[][] graph;
+    static boolean[] visited;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    static void bfs(int a){
+        n = Integer.parseInt(br.readLine());
+        m = Integer.parseInt(br.readLine());
+        graph = new int[n+1][n+1];
+        visited = new boolean[n+1];
+
+        for (int i = 0; i < m; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int com = Integer.parseInt(st.nextToken());
+            int ssang = Integer.parseInt(st.nextToken());
+            graph[com][ssang] = graph[ssang][com] = 1;
+        }
+        bfs(1);
+        System.out.println(cnt);
+    }
+    static void bfs(int node){
         Queue<Integer> queue = new LinkedList<>();
-        queue.add(a);
+        queue.add(node);
 
         while (!queue.isEmpty()){
-            a = queue.poll();
-            check[a] = true;
-            for(int i=1; i<=comCnt; i++){
-                if(!check[i] && computer[a][i] == 1){
-                    check[i] = true;
+            int tmp = queue.poll();
+            visited[tmp] = true;
+            for (int i = 1; i <= n; i++) {
+                if (!visited[i] && graph[tmp][i] == 1){
                     queue.add(i);
+                    visited[i] = true;
                     cnt++;
                 }
             }
         }
-    }
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        comCnt = Integer.parseInt(br.readLine());
-        netCnt = Integer.parseInt(br.readLine());
-
-        computer = new int[comCnt+1][comCnt+1];
-        check = new boolean[comCnt+1];
-
-        for(int i=0; i<netCnt; i++){
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int num = Integer.parseInt(st.nextToken());
-            int ssang = Integer.parseInt(st.nextToken());
-            computer[num][ssang] = computer[ssang][num] = 1;
-        }
-        bfs(1);
-        System.out.println(cnt);
     }
 }
