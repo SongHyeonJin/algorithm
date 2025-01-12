@@ -50,7 +50,7 @@ public class Main {
             return o1.len - o2.len;
         });
         dist = new int[N+1];
-        for (int i = 0; i <= N; i++) dist[i] = INF;
+        Arrays.fill(dist, INF);
         pq.add(new Edge(start, 0));
         dist[start] = 0;
         while (!pq.isEmpty()){
