@@ -10,17 +10,17 @@ public class Main {
         int n = Integer.parseInt(br.readLine());
         PriorityQueue<Integer> pq = new PriorityQueue<>();
 
-        for(int i=0; i<n; i++){
+        for (int i = 0; i < n; i++)
             pq.add(Integer.parseInt(br.readLine()));
-        }
-        int num = 0;
-        while (pq.size() > 1){
-            int num1 = pq.poll();
-            int num2 = pq.poll();
 
-            num += num1 + num2;
-            pq.add(num1 + num2);
+        int cardSum = 0;
+        while (pq.size()>1) {
+            int cardOne = pq.poll();
+            int cardTwo = pq.poll();
+
+            cardSum += cardOne+cardTwo;
+            pq.add(cardOne+cardTwo);
         }
-        System.out.println(num);
+        System.out.println(cardSum);
     }
 }
