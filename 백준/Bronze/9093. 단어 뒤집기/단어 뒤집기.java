@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -8,12 +9,11 @@ public class Main {
         StringBuilder answer = new StringBuilder();
 
         int t = Integer.parseInt(br.readLine());
+
         for (int i = 0; i < t; i++) {
-            String[] sentence = br.readLine().split(" ");
-            for (int j = 0; j < sentence.length; j++) {
-                StringBuilder sb = new StringBuilder();
-                for (int k = 0; k < sentence[j].length(); k++)
-                    sb.append(sentence[j].charAt(k));
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            while (st.hasMoreTokens()) {
+                StringBuilder sb = new StringBuilder(st.nextToken());
                 answer.append(sb.reverse()).append(" ");
             }
             answer.append("\n");
