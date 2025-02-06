@@ -36,8 +36,7 @@ public class Main {
     static void search(int type, int target) {
         if (type==2) sb.append("yes").append("\n");
         else {
-            int count = 0;
-            for (int nxt : tree.get(target)) count++;
+            int count = tree.get(target).size();
             sb.append(count>=2 ? "yes" : "no").append("\n");
         }
     }
