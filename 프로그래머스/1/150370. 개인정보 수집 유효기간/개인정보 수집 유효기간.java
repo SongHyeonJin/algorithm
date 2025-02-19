@@ -31,15 +31,7 @@ class Solution {
             day--;
             if(day==0) {
                 month--;
-                if(month==3) {
-                    day+=28;
-                }
-                else if(month==5 || month==7 || month==10 || month==12) {
-                    day += 30;
-                }
-                else {
-                    day += 31;
-                }
+                day+=28;
             }
             
             if(month==0) {
