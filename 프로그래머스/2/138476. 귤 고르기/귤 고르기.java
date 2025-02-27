@@ -3,31 +3,21 @@ import java.util.*;
 class Solution {
     public int solution(int k, int[] tangerine) {
         int answer = 0;
+        Map<Integer, Integer> map = new HashMap<>();
         
-        int max = 0;
-        for(int i=0; i<tangerine.length; i++) {
-            max = Math.max(max, tangerine[i]);
+        for(int t : tangerine) {
+            map.put(t, map.getOrDefault(t, 0)+1);
         }
         
-        int[] all = new int[max+1];
-        for(int i=0; i<tangerine.length; i++) {
-            all[tangerine[i]]++;
-        }
+        List<Integer> list = new ArrayList<>(map.keySet());
+        list.sort((o1, o2) -> map.get(o2)-map.get(o1));
         
-        List<Integer> list = new ArrayList<>();
-        
-        for(int i : all) {
-            if(i!=0) list.add(i);
-        }
-        
-        Collections.sort(list, Collections.reverseOrder());
-        
-        int sum=0;
-        for(int i=0; i<list.size(); i++) {
-            if(sum>=k) break;
-            sum += list.get(i);
+        for(int i : list) {
+            k -= map.get(i);
             answer++;
+            if(k<=0) break;
         }
+        
         return answer;
     }
 }
