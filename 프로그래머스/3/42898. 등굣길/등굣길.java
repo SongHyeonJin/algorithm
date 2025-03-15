@@ -2,32 +2,32 @@ import java.util.*;
 
 class Solution {
     static final int MOD = 1000000007;
+    static int[][] memo;
+    static int[][] puddles_map;
+    static int dp(int n, int m) {
+        if(m<1 || n<1 || puddles_map[n][m]==-1) return 0;
+        
+        if(m==1 && n==1) return 1;
+        
+        if(memo[n][m]!=-1) return memo[n][m];
+        
+        memo[n][m] = (dp(n, m-1)+dp(n-1, m))%MOD;
+        
+        return memo[n][m];
+    }
     public int solution(int m, int n, int[][] puddles) {
-        int[][] dp = new int[n+1][m+1];
+        memo = new int[n+1][m+1];
+        puddles_map = new int[n+1][m+1];
         
         for(int[] puddle : puddles) {
-            dp[puddle[1]][puddle[0]] = -1;
+            puddles_map[puddle[1]][puddle[0]] = -1;
         }
         
-        for(int i=1; i<=n; i++) {
-            for(int j=1; j<=m; j++) {
-                if(i==1 && j==1) {
-                    dp[i][j] = 1;
-                }
-                
-                if(dp[i][j]==-1) {
-                    dp[i][j] = 0;
-                    continue;
-                }
-                
-                if(i!=1) {
-                    dp[i][j] += dp[i-1][j]%MOD;
-                }
-                if(j!=1) {
-                    dp[i][j] += dp[i][j-1]%MOD;
-                }
-            }
+        for(int[] row : memo) {
+            Arrays.fill(row, -1);
         }
-        return dp[n][m]%MOD;
+        
+        
+        return dp(n, m);
     }
 }
