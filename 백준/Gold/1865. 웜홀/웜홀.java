@@ -13,6 +13,7 @@ public class Main {
             this.weight = weight;
         }
     }
+    static final int INF = 1000000000;
     static Edge[] edge;
     static int[] dist;
     public static void main(String[] args) throws IOException {
@@ -49,8 +50,10 @@ public class Main {
 
             dist = new int[n + 1];
             for (int i = 1; i <= n; i++) {
-                dist[i] = 0;
+                dist[i] = INF;
             }
+            dist[1] = 0;
+
             sb.append(bellmanFord(n) ? "YES" : "NO").append("\n");
         }
         System.out.println(sb.toString());
