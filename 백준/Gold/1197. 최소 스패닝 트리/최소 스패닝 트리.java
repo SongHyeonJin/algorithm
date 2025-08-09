@@ -1,62 +1,59 @@
 import java.io.*;
 import java.util.*;
 
-class Edge implements Comparable<Edge> {
-    int from, to, weight;
-    Edge(int from, int to, int weight) {
-        this.from = from;
-        this.to = to;
+class Node implements Comparable<Node> {
+    int vertex, weight;
+    Node(int vertex, int weight) {
+        this.vertex = vertex;
         this.weight = weight;
     }
     @Override
-    public int compareTo(Edge o) {
+    public int compareTo(Node o) {
         return this.weight - o.weight;
     }
 }
 
 public class Main {
-    static int[] parent;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int V = Integer.parseInt(st.nextToken());
         int E = Integer.parseInt(st.nextToken());
 
-        List<Edge> edges = new ArrayList<>();
+        List<List<Node>> graph = new ArrayList<>();
+        for (int i = 0; i <= V; i++) graph.add(new ArrayList<>());
+
         for (int i = 0; i < E; i++) {
             st = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
             int c = Integer.parseInt(st.nextToken());
-            edges.add(new Edge(a, b, c));
+            graph.get(a).add(new Node(b, c));
+            graph.get(b).add(new Node(a, c));
         }
 
-        parent = new int[V + 1];
-        for (int i = 1; i <= V; i++) parent[i] = i;
+        boolean[] visited = new boolean[V + 1];
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        pq.offer(new Node(1, 0));
 
-        Collections.sort(edges);
+        int sum = 0;
+        int count = 0;
 
-        int sum = 0, count = 0;
-        for (Edge e : edges) {
-            if (find(e.from) != find(e.to)) {
-                union(e.from, e.to);
-                sum += e.weight;
-                count++;
-                if (count == V - 1) break;
+        while (!pq.isEmpty()) {
+            Node now = pq.poll();
+            if (visited[now.vertex]) continue;
+            visited[now.vertex] = true;
+            sum += now.weight;
+            count++;
+
+            if (count == V) break;
+
+            for (Node next : graph.get(now.vertex)) {
+                if (!visited[next.vertex]) {
+                    pq.offer(next);
+                }
             }
         }
         System.out.println(sum);
-    }
-
-    static int find(int x) {
-        if (parent[x] == x) return x;
-        return parent[x] = find(parent[x]);
-    }
-
-    static void union(int a, int b) {
-        a = find(a);
-        b = find(b);
-        if (a != b) parent[b] = a;
     }
 }
