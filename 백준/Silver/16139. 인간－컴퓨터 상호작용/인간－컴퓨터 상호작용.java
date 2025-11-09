@@ -1,31 +1,34 @@
 import java.io.*;
-import java.util.StringTokenizer;
+import java.util.*;
 
-public class Main {
-
+class Main {
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-        String S = br.readLine();
-        int N = Integer.parseInt(br.readLine());
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
 
-        while(N --> 0) {
-            st = new StringTokenizer(br.readLine());
-            char findChar = st.nextToken().charAt(0);
-            int start = Integer.parseInt(st.nextToken());
-            int end = Integer.parseInt(st.nextToken());
+        String target = br.readLine();
 
-            int count = 0;
+        int[][] A = new int[target.length()+1][26];
 
-            if(S.indexOf(findChar) >= 0){
-                for(int i = start; i <= end; i++){
-                    if(findChar == S.charAt(i)){
-                        count++;
-                    }
-                }
+        for(int i=1; i<target.length()+1; i++){
+            int value = target.charAt(i-1) - 'a';
+            for(int j=0; j<A[i].length; j++){
+                A[i][j] = A[i-1][j] + (value == j ? 1 : 0);
             }
-            System.out.println(count);
         }
-    }
 
+        int N = Integer.parseInt(br.readLine());
+        StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
+        
+        for(int i=0; i<N; i++){
+            st = new StringTokenizer(br.readLine());
+            int value = st.nextToken().charAt(0) - 'a';
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            
+            sb.append(A[b+1][value] - A[a][value]).append("\n");
+        }
+        System.out.println(sb);
+
+    }
 }
