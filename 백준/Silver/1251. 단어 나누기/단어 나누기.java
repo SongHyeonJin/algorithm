@@ -1,0 +1,35 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        String str = br.readLine();
+        LinkedList<String> list = new LinkedList<>();
+        
+        for (int i = 2; i < str.length(); i++) {
+            for (int j = 1; j < i; j++) {
+                StringBuilder sb1 = new StringBuilder(str.substring(0, j));
+                String str1 = sb1.reverse().toString();
+                
+                StringBuilder sb2 = new StringBuilder(str.substring(j, i));
+                String str2 = sb2.reverse().toString();
+                
+                StringBuilder sb3 = new StringBuilder(str.substring(i));
+                String str3 = sb3.reverse().toString();
+                
+                list.add(str1 + str2 + str3);
+
+            }
+        }
+        
+        Collections.sort(list);
+        
+        System.out.println(list.pop());
+    }
+}
