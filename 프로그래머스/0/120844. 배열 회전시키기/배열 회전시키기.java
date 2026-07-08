@@ -3,19 +3,13 @@ import java.util.*;
 class Solution {
     public int[] solution(int[] numbers, String direction) {
         int[] answer = new int[numbers.length];
-        Deque<Integer> dq = new LinkedList<>();
-        
-        for(int i : numbers) dq.offerLast(i);
         
         if (direction.equals("right")) {
-            dq.offerFirst(dq.pollLast());
+            System.arraycopy(numbers, 0, answer, 1, numbers.length - 1);
+            answer[0] = numbers[numbers.length - 1];
         } else {
-            dq.offerLast(dq.pollFirst());
-        }
-        
-        int idx = 0;
-        while (!dq.isEmpty()) {
-            answer[idx++] = dq.pollFirst();
+            System.arraycopy(numbers, 1, answer, 0, numbers.length - 1);
+            answer[numbers.length - 1] = numbers[0];
         }
         
         return answer;
