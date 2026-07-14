@@ -2,51 +2,35 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String today, String[] terms, String[] privacies) {
-        ArrayList<Integer> answer = new ArrayList<>();
+        List<Integer> answer = new ArrayList<>();
+        Map<String, Integer> termMap = new HashMap<>();
         
-        Map<String, Integer> period = new HashMap<>();
-        int todayY = Integer.parseInt(today.substring(0, 4));
-        int todayM = Integer.parseInt(today.substring(5, 7));
-        int todayD = Integer.parseInt(today.substring(8, 10));
-        
-        for(int i=0; i<terms.length; i++) {
-            String[] s = terms[i].split(" ");
-            period.put(s[0], Integer.parseInt(s[1]));
+        for (String term : terms) {
+            String[] split = term.split(" ");
+            termMap.put(split[0], Integer.parseInt(split[1]));
         }
         
-        for(int i=0; i<privacies.length; i++) {
-            String[] s = privacies[i].split(" ");
-            int year = Integer.parseInt(s[0].substring(0, 4));
-            int month = Integer.parseInt(s[0].substring(5, 7));
-            int day = Integer.parseInt(s[0].substring(8, 10));
-            String type = s[1];
+        long todayTotalDays = convertToDays(today);
+        
+        for (int i = 0; i < privacies.length; i++) {
+            String[] split = privacies[i].split(" ");
+            long privacyDate = convertToDays(split[0]);
+            int termMonths = termMap.get(split[1]);
             
-            int plusMonth = period.get(type);
-            
-            month += plusMonth;
-            while(month>12) {
-                year++;
-                month-=12;
-            }
-            day--;
-            if(day==0) {
-                month--;
-                day+=28;
-            }
-            
-            if(month==0) {
-                year--;
-                month+=12;
-            }
-            
-            if(todayY>year) {
-                answer.add(i+1);
-            } else if(todayY==year && todayM>month) {
-                answer.add(i+1);
-            } else if(todayY==year && todayM==month && todayD>day) {
-                answer.add(i+1);
+            if (todayTotalDays >= privacyDate + (termMonths * 28L)) {
+                answer.add(i + 1);
             }
         }
-        return answer.stream().mapToInt(a -> a).toArray();
+        
+        return answer.stream().mapToInt(Integer::intValue).toArray();
+    }
+    
+    private int convertToDays(String date) {
+        String[] parts = date.split("\\.");
+        int year = Integer.parseInt(parts[0]);
+        int month = Integer.parseInt(parts[1]);
+        int day = Integer.parseInt(parts[2]);
+        
+        return (year * 12 * 28) + (month * 28) + day;
     }
 }
