@@ -1,35 +1,37 @@
 import java.util.*;
 
 class Solution {
-    static int[] dy = {1, 0, -1, 0};
-    static int[] dx = {0, 1, 0, -1};
-    static int[][] graph;
-    static Queue<int[]> q = new LinkedList<>();
+    private static final int[] dy = {1, 0, -1, 0};
+    private static final int[] dx = {0, 1, 0, -1};
     public int solution(int[][] maps) {
-        int y = maps.length;
-        int x = maps[0].length;
-        graph = new int[y][x];
-        bfs(maps);
-        return graph[y-1][x-1]==0 ? -1 : graph[y-1][x-1];
-    }
-    static void bfs(int[][] maps){
-        graph[0][0] = 1;
-        q.add(new int[]{0, 0});
+        int n = maps.length;
+        int m = maps[0].length;
+        int[][] dist = new int[n][m];
         
-        while(!q.isEmpty()) {
-            int[] tmp = q.poll();
-            int y = tmp[0];
-            int x = tmp[1];
-            for(int i=0; i<4; i++) {
-                int ny = y + dy[i];
-                int nx = x + dx[i];
-                if(0>ny || ny>=maps.length || 0>nx || nx>=maps[0].length) continue;
+        return bfs(maps, dist, n, m);
+    }
+    
+    private int bfs(int[][] maps, int[][] dist, int n, int m) {
+        Queue<int[]> q = new LinkedList<>();
+        q.offer(new int[]{0, 0});
+        dist[0][0] = 1;
+        
+        while (!q.isEmpty()) {
+            int[] curr = q.poll();
+            
+            if (curr[0] == n - 1 && curr[1] == m - 1) return dist[curr[0]][curr[1]];
+            
+            for (int i = 0; i < 4; i++) {
+                int ny = curr[0] + dy[i];
+                int nx = curr[1] + dx[i];
                 
-                if(graph[ny][nx]==0 && maps[ny][nx]==1) {
-                    graph[ny][nx] = graph[y][x] + 1;
-                    q.add(new int[]{ny, nx});
+                if (ny >= 0 && ny < n && nx >= 0 && nx < m && maps[ny][nx] == 1 && dist[ny][nx] == 0) {
+                    dist[ny][nx] = dist[curr[0]][curr[1]] + 1;
+                    q.offer(new int[]{ny, nx});
                 }
+                
             }
         }
+        return -1;
     }
 }
