@@ -1,24 +1,16 @@
-import java.util.*;
-
 class Solution {
     public String solution(String number, int k) {
-        String answer = "";
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stack = new StringBuilder();
+        int count = k;
         
-        char[] arr = number.toCharArray();
-        int len = number.length()-k;
-        int idx = 0;
-        
-        for(int i=0; i<len; i++){
-            char max = '0';
-            for(int j=idx; j<=i+k; j++)
-                if(arr[j] > max){
-                    max = arr[j];
-                    idx = j+1;
-                }
-        sb.append(String.valueOf(max));
+        for (char num : number.toCharArray()) {
+            while (count > 0 && stack.length() > 0 && stack.charAt(stack.length() - 1) < num) {
+                stack.deleteCharAt(stack.length() - 1);
+                count--;
+            }
+            stack.append(num);
         }
-        answer = sb.toString();
-        return answer;
+        
+        return stack.substring(0, number.length() - k);
     }
 }
