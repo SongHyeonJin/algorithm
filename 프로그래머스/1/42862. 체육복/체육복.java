@@ -1,31 +1,38 @@
 class Solution {
     public int solution(int n, int[] lost, int[] reserve) {
-        int answer = 0;
+        int[] students = new int[n + 2];
         
-        int[] student = new int[n+2];
+        for (int i = 1; i <= n; i++) {
+            students[i] = 1;
+        }
         
-        for(int i=0; i<lost.length; i++)
-            student[lost[i]]--;
+        for (int l : lost) {
+            students[l]--;
+        }
         
-        for(int i=0; i<reserve.length; i++)
-            student[reserve[i]]++;
+        for (int r : reserve) {
+            students[r]++;
+        }
         
-        
-        for(int i=0; i<student.length; i++) {
-            if(student[i]==-1) {
-                if(student[i-1]==1) {
-                    student[i]++;
-                    student[i-1]--;
-                } else if(student[i+1]==1) {
-                    student[i]++;
-                    student[i+1]--;
+        for (int i = 1; i <= n; i++) {
+            if (students[i] == 0) {
+                if (students[i - 1] == 2) {
+                    students[i - 1]--;
+                    students[i]++;
+                } else if (students[i + 1] == 2) {
+                    students[i + 1]--;
+                    students[i]++;
                 }
             }
         }
         
+        int answer = 0;
+        for (int i = 1; i <= n; i++) {
+            if (students[i] >= 1) {
+                answer++;
+            }
+        }
         
-        for(int i=1; i<student.length-1; i++)
-            if(student[i]!=-1) answer++;
         return answer;
     }
 }
