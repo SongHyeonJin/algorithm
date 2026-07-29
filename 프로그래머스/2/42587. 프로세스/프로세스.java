@@ -2,30 +2,35 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] priorities, int location) {
-        List<PrintJob> printer = new ArrayList<>();
-        for(int i=0; i<priorities.length; i++){
-            printer.add(new PrintJob(i, priorities[i]));
-        }
-        int turn = 0;
-        while(!printer.isEmpty()){
-            PrintJob job = printer.remove(0);
-            if(printer.stream().anyMatch(otherJob -> job.priority < otherJob.priority)){
-                printer.add(job);
-            }
-            else{
-                turn++;
-                if(location == job.location) break;
-            }
-        }
-        return turn;
-    }
-    class PrintJob{
-        int priority;
-        int location;
+        Queue<int[]> queue = new LinkedList<>();
         
-        public PrintJob(int location, int priority){
-            this.location = location;
-            this.priority = priority;
+        for (int i = 0; i < priorities.length; i++) {
+            queue.add(new int[]{i, priorities[i]});
         }
+        
+        int answer = 0;
+        
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            boolean hasHigherPriority = false;
+            
+            for (int[] process : queue) {
+                if (process[1] > current[1]) {
+                    hasHigherPriority = true;
+                    break;
+                }
+            }
+            
+            if (hasHigherPriority) {
+                queue.add(current);
+            } else { 
+                answer++;
+                if (current[0] == location) {
+                    return answer;
+                }
+            }
+        }
+        
+        return answer;
     }
 }
