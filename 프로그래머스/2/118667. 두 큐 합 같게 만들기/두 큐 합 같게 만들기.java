@@ -2,36 +2,48 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] queue1, int[] queue2) {
-        int answer = 0;
-        long total = 0;
-        long q1Sum = 0;
-        Queue<Integer> q1 = new LinkedList<>();
-        Queue<Integer> q2 = new LinkedList<>();
+        Queue<Long> q1 = new LinkedList<>();
+        Queue<Long> q2 = new LinkedList<>();
         
-        for(int i=0; i<queue1.length; i++) {
-            total += queue1[i] + queue2[i];
-            q1Sum += queue1[i];
-            q1.add(queue1[i]);
-            q2.add(queue2[i]);
+        long sum1 = 0;
+        long sum2 = 0;
+        long totalSum = 0;
+        
+        for (int num : queue1) {
+            q1.add((long) num);
+            sum1 += num;
         }
         
-        if (total%2 != 0) return -1;
+        for (int num : queue2) {
+            q2.add((long) num);
+            sum2 += num;
+        }
         
-        long target = total/2;
-        while(true) {
-            if (answer > (queue1.length + queue2.length) * 2) return -1;
+        totalSum = sum1 + sum2;
+        
+        if (totalSum % 2 != 0) return -1;
+        
+        long target = totalSum / 2;
+        int maxCount = (queue1.length + queue2.length) * 2;
+        int count = 0;
+        
+        while (count <= maxCount) {
+            if (sum1 == target) return count;
             
-            if (q1Sum == target) break;
-            else if (q1Sum > target) {
-                q1Sum -= q1.peek();
-                q2.add(q1.poll());
-            } else  {
-                q1Sum += q2.peek();
-                q1.add(q2.poll());
+            if (sum1 > target) {
+                long val = q1.poll();
+                sum1 -= val;
+                sum2 += val;
+                q2.add(val);
+            } else {
+                long val = q2.poll();
+                sum2 -= val;
+                sum1 += val;
+                q1.add(val);
             }
-            answer++;
+            count++;
         }
         
-        return answer;
+        return -1;
     }
 }
