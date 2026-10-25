@@ -2,29 +2,37 @@ import java.util.*;
 
 class Solution {
     public String[] solution(String[] record) {
-        List<String> answer = new ArrayList<>();
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> uidToNickname = new HashMap<>();
+        List<String[]> actions = new ArrayList<>();
         
-        for(int i=0; i<record.length; i++) {
-            String[] rec = record[i].split(" ");
+        for (String r : record) {
+            String[] parts = r.split(" ");
+            String cmd = parts[0];
+            String uid = parts[1];
             
-            if(rec[0].equals("Enter")) {
-                map.put(rec[1], rec[2]);
-            } else if(rec[0].equals("Change")) {
-                map.put(rec[1], rec[2]);
+            if (!cmd.equals("Leave")) {
+                String nickname = parts[2];
+                uidToNickname.put(uid, nickname);
+            }
+            
+            if (!cmd.equals("Change")) {
+                actions.add(new String[]{cmd, uid});
             }
         }
         
-        for(int i=0; i<record.length; i++) {
-            String[] rec = record[i].split(" ");
+        String[] answer = new String[actions.size()];
+        for (int i = 0; i < actions.size(); i++) {
+            String cmd = actions.get(i)[0];
+            String uid = actions.get(i)[1];
+            String nickname = uidToNickname.get(uid);
             
-            if(rec[0].equals("Enter")) {
-                answer.add(map.get(rec[1]) + "님이 들어왔습니다.");
-            } else if(rec[0].equals("Leave")) {
-                answer.add(map.get(rec[1]) + "님이 나갔습니다.");
+            if (cmd.equals("Enter")) {
+                answer[i] = nickname + "님이 들어왔습니다.";
+            } else if (cmd.equals("Leave")) {
+                answer[i] = nickname + "님이 나갔습니다.";
             }
         }
         
-        return answer.stream().toArray(String[]::new);
+        return answer;
     }
 }
