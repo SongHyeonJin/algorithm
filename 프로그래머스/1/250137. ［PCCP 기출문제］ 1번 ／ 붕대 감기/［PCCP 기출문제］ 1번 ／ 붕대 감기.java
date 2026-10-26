@@ -1,7 +1,7 @@
 import java.util.*;
 
 class Solution {
-    public int solution(int[] bandage, int health, int[][] attacks) {
+    public int solution(int[] bandage, int health, int[][] attacks) {        
         int t = bandage[0];
         int x = bandage[1];
         int y = bandage[2];
@@ -18,16 +18,12 @@ class Solution {
         int continuousSuccess = 0;
         
         for (int time = 1; time <= lastAttackTime; time++) {
-            
             if (attackMap.containsKey(time)) {
                 currentHealth -= attackMap.get(time);
                 continuousSuccess = 0;
                 
-                if (currentHealth <= 0) {
-                    return -1;
-                }
-            } 
-            else {
+                if (currentHealth <= 0) return -1;
+            } else {
                 continuousSuccess++;
                 currentHealth += x;
                 
@@ -40,6 +36,7 @@ class Solution {
                     currentHealth = maxHealth;
                 }
             }
+            
         }
         
         return currentHealth;
