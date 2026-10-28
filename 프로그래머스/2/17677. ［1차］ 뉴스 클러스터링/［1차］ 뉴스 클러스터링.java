@@ -2,38 +2,39 @@ import java.util.*;
 
 class Solution {
     public int solution(String str1, String str2) {
-        str1 = str1.toLowerCase();
-        str2 = str2.toLowerCase();
+        List<String> pairs1 = generatePairs(str1);
+        List<String> pairs2 = generatePairs(str2);
         
-        ArrayList<String> list1 = findStr(str1);
-        ArrayList<String> list2 = findStr(str2);
+        if (pairs1.isEmpty() && pairs2.isEmpty()) return 65536;
         
-        if(list1.isEmpty() && list2.isEmpty()) return 65536;
+        List<String> inter = new ArrayList<>();
+        List<String> union = new ArrayList<>();
         
-        ArrayList<String> inter = new ArrayList<>();
-        ArrayList<String> union = new ArrayList<>();
-        
-        for(String s : list1) {
-            if(list2.remove(s)) {
-                inter.add(s);
+        for (String pair : pairs1) {
+            if (pairs2.remove(pair)) {
+                inter.add(pair);
             }
-            union.add(s);
+            union.add(pair);
         }
-        union.addAll(list2);
+        union.addAll(pairs2);
         
-        double jacquard = (double)inter.size()/(double)union.size();
-        return (int)(jacquard*65536);
+        double jaccard = (double) inter.size() / union.size();
+        return (int) (jaccard * 65536);
     }
-    static ArrayList<String> findStr(String str) {
-        ArrayList<String> list = new ArrayList<>();
-        str = str.toLowerCase();
+    
+    private List<String> generatePairs(String str) {
+        List<String> pairs = new ArrayList<>();
+        String lowerStr = str.toLowerCase();
         
-        for(int i=0; i<str.length()-1; i++) {
-            if(str.charAt(i)>='a' && str.charAt(i)<='z' && str.charAt(i+1)>='a' && str.charAt(i+1)<='z') {
-                String s = str.substring(i, i + 2);
-                list.add(s);
+        for (int i = 0 ; i < lowerStr.length() - 1; i++) {
+            char c1 = lowerStr.charAt(i);
+            char c2 = lowerStr.charAt(i + 1);
+            
+            if (c1 >= 'a' && c1 <= 'z' && c2 >= 'a' && c2 <= 'z') {
+                pairs.add("" + c1 + c2);
             }
         }
-        return list;
+        
+        return pairs;
     }
 }
