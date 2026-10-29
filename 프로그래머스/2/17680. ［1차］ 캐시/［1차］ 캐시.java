@@ -2,27 +2,31 @@ import java.util.*;
 
 class Solution {
     public int solution(int cacheSize, String[] cities) {
-        int answer = 0;
-        List<String> cache = new ArrayList<>();
-        
-        if(cacheSize==0) return cities.length*5;
-        
-        for(int i=0; i<cities.length; i++) {
-            String city = cities[i].toLowerCase();
-            
-            if(cache.contains(city)) {
-                cache.remove(city);
-                cache.add(city);
-                answer++;
-            } 
-            else {
-                if(cache.size()==cacheSize) {
-                    cache.remove(0);
-                }
-                cache.add(city);
-                answer += 5;
-            }
+        if (cacheSize == 0) {
+            return cities.length * 5;
         }
-        return answer;
+        
+        int totalTime = 0;
+        
+        Map<String, Boolean> cache = new LinkedHashMap<String, Boolean>(cacheSize, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, Boolean> eldest) {
+                return size() > cacheSize;
+            }
+        };
+        
+        for (String city : cities) {
+            String lowerCity = city.toLowerCase();
+            
+            if (cache.containsKey(lowerCity)) {
+                totalTime += 1;
+            } else {
+                totalTime += 5;
+            }
+            
+            cache.put(lowerCity, true);
+        }
+        
+        return totalTime;
     }
 }
