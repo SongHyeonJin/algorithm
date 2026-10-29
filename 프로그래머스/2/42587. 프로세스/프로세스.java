@@ -1,36 +1,45 @@
 import java.util.*;
 
 class Solution {
+    private static class Process {
+        int id;
+        int priority;
+        
+        public Process(int id, int priority) {
+            this.id = id;
+            this.priority = priority;
+        }
+    }
     public int solution(int[] priorities, int location) {
-        Queue<int[]> queue = new LinkedList<>();
+        Queue<Process> processQueue = new LinkedList<>();
         
         for (int i = 0; i < priorities.length; i++) {
-            queue.add(new int[]{i, priorities[i]});
+            processQueue.offer(new Process(i, priorities[i]));
         }
         
-        int answer = 0;
-        
-        while (!queue.isEmpty()) {
-            int[] current = queue.poll();
-            boolean hasHigherPriority = false;
+        int executionSequence = 0;
+        while (!processQueue.isEmpty()) {
+            Process currentProcess = processQueue.poll();
             
-            for (int[] process : queue) {
-                if (process[1] > current[1]) {
+            boolean hasHigherPriority = false;        
+            for (Process otherProcess : processQueue) {
+                if (otherProcess.priority > currentProcess.priority) {
                     hasHigherPriority = true;
                     break;
                 }
             }
             
             if (hasHigherPriority) {
-                queue.add(current);
-            } else { 
-                answer++;
-                if (current[0] == location) {
-                    return answer;
+                processQueue.add(currentProcess);
+            } else {
+                executionSequence++;
+                if (currentProcess.id == location) {
+                    return executionSequence;
                 }
             }
+            
         }
         
-        return answer;
+        return executionSequence;
     }
 }
