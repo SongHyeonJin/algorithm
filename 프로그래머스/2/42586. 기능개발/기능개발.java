@@ -2,27 +2,27 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        List<Integer> answer = new ArrayList<>();
+        List<Integer> deploymentCounts = new ArrayList<>();
+        int maxDays = 0;
+        int currentGroupCount = 0;
         
-        int[] days = new int[progresses.length];
         for (int i = 0; i < progresses.length; i++) {
-            days[i] = (int) Math.ceil((100.0 - progresses[i]) / speeds[i]);
-        }
-        
-        int deployDay = days[0];
-        int count = 0;
-        
-        for (int i = 0; i < days.length; i++) {
-            if (days[i] <= deployDay) {
-                count++;
+            int remainingWork = 100 - progresses[i];
+            int requireDays = (remainingWork + speeds[i] - 1) / speeds[i];
+            
+            if (requireDays > maxDays) {
+                if (currentGroupCount > 0) {
+                    deploymentCounts.add(currentGroupCount);
+                }
+                maxDays = requireDays;
+                currentGroupCount = 1;
             } else {
-                answer.add(count);
-                deployDay = days[i];
-                count = 1;
+                currentGroupCount++;
             }
         }
-        answer.add(count);
         
-        return answer.stream().mapToInt(i -> i).toArray();
+        deploymentCounts.add(currentGroupCount);
+        
+        return deploymentCounts.stream().mapToInt(Integer::intValue).toArray();
     }
 }
