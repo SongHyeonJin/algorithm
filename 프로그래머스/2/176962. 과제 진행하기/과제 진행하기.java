@@ -1,23 +1,27 @@
 import java.util.*;
 
 class Solution {
-    static class Assignment {
+    
+    private class Assignment {
         String name;
-        int start;
-        int playtime;
-
+        int startTime, playtime;
+        
         public Assignment(String name, String start, int playtime) {
             this.name = name;
-            this.start = convertToMinutes(start);
+            this.startTime = convertToMinutes(start);
             this.playtime = playtime;
         }
-
+        
         private int convertToMinutes(String time) {
             String[] parts = time.split(":");
-            return Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);
+            int hour = Integer.parseInt(parts[0]);
+            int minute = Integer.parseInt(parts[1]);
+            
+            return hour * 60 + minute;
         }
+        
     }
-
+    
     public String[] solution(String[][] plans) {
         int n = plans.length;
         Assignment[] tasks = new Assignment[n];
@@ -26,42 +30,41 @@ class Solution {
             tasks[i] = new Assignment(plans[i][0], plans[i][1], Integer.parseInt(plans[i][2]));
         }
         
-        Arrays.sort(tasks, (a, b) -> Integer.compare(a.start, b.start));
+        Arrays.sort(tasks, Comparator.comparingInt(a -> a.startTime));
         
-        List<String> completed = new ArrayList<>();
-        Stack<Assignment> stack = new Stack<>();
+        List<String> completedTasks = new ArrayList<>();
+        Deque<Assignment> pausedTasks = new ArrayDeque<>();
         
         for (int i = 0; i < n; i++) {
-            Assignment current = tasks[i];
+            Assignment currentTask = tasks[i];
             
-            int nextStartTime = (i < n - 1) ? tasks[i + 1].start : Integer.MAX_VALUE;
+            int nextStartTime = (i < n - 1) ? tasks[i + 1].startTime : Integer.MAX_VALUE;
             
-            int timePassed = current.playtime;
-            
-            if (current.start + timePassed <= nextStartTime) {
-                completed.add(current.name);
-                int timeLeft = nextStartTime - (current.start + timePassed);
+            if (currentTask.startTime + currentTask.playtime <= nextStartTime) {
+                completedTasks.add(currentTask.name);
                 
-                while (!stack.isEmpty() && timeLeft > 0) {
-                    Assignment paused = stack.peek();
-                    if (paused.playtime <= timeLeft) {
-                        timeLeft -= paused.playtime;
-                        completed.add(stack.pop().name);
+                int remainingTime = nextStartTime - (currentTask.startTime + currentTask.playtime);
+                while (!pausedTasks.isEmpty() && remainingTime > 0) {
+                    Assignment pausedTask = pausedTasks.peek();
+                    
+                    if (pausedTask.playtime <= remainingTime) {
+                        remainingTime -= pausedTask.playtime;
+                        completedTasks.add(pausedTasks.pop().name);
                     } else {
-                        paused.playtime -= timeLeft;
-                        timeLeft = 0;
+                        pausedTask.playtime -= remainingTime;
+                        remainingTime = 0;
                     }
                 }
             } else {
-                current.playtime -= (nextStartTime - current.start);
-                stack.push(current);
+                currentTask.playtime -= (nextStartTime - currentTask.startTime);
+                pausedTasks.push(currentTask);
             }
         }
         
-        while (!stack.isEmpty()) {
-            completed.add(stack.pop().name);
+        while (!pausedTasks.isEmpty()) {
+            completedTasks.add(pausedTasks.pop().name);
         }
         
-        return completed.toArray(new String[0]);
+        return completedTasks.toArray(new String[0]);
     }
 }
