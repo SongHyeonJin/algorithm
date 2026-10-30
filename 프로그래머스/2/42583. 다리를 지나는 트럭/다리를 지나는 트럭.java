@@ -2,28 +2,29 @@ import java.util.*;
 
 class Solution {
     public int solution(int bridge_length, int weight, int[] truck_weights) {
-        Queue<Integer> bridge = new LinkedList<>();
+        Queue<Integer> bridgeQueue = new ArrayDeque<>();
         
         for (int i = 0; i < bridge_length; i++) {
-            bridge.add(0);
+            bridgeQueue.offer(0);
         }
         
         int time = 0;
-        int currentWeight = 0;
-        int truckIndex = 0;
+        int currentBridgeWeight = 0;
+        int truckIdx = 0;
         
-        while (truckIndex < truck_weights.length) {
+        while (truckIdx < truck_weights.length) {
             time++;
             
-            currentWeight -= bridge.poll();
+            currentBridgeWeight -= bridgeQueue.poll();
             
-            int nextTruck = truck_weights[truckIndex];
-            if (currentWeight + nextTruck <= weight) {
-                bridge.add(nextTruck);
-                currentWeight += nextTruck;
-                truckIndex++;
+            int nextTruckWeight = truck_weights[truckIdx];
+            
+            if (currentBridgeWeight + nextTruckWeight <= weight) {
+                bridgeQueue.offer(nextTruckWeight);
+                currentBridgeWeight += nextTruckWeight;
+                truckIdx++;
             } else {
-                bridge.add(0);
+                bridgeQueue.offer(0);
             }
         }
         
