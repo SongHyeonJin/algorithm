@@ -1,16 +1,16 @@
 class Solution {
     boolean solution(String s) {
-        int count = 0;
-        
+        int openCount = 0;;
+
         for (char c : s.toCharArray()) {
             if (c == '(') {
-                count++;
+                openCount++;
             } else {
-                if (count == 0) return false;
-                count--;
+                if (openCount == 0) return false;
+                openCount--;
             }
         }
-        
-        return count == 0;
+
+        return openCount == 0;
     }
 }
