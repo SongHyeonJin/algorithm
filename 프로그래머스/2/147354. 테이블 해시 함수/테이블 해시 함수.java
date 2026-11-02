@@ -2,29 +2,34 @@ import java.util.*;
 
 class Solution {
     public int solution(int[][] data, int col, int row_begin, int row_end) {
-        Arrays.sort(data, (o1, o2) -> {
-            if (o1[col - 1] != o2[col - 1]) {
-                return Integer.compare(o1[col - 1], o2[col - 1]);
+        Arrays.sort(data, (row1, row2) -> {
+            if (row1[col - 1] == row2[col - 1]) {
+                return Integer.compare(row2[0], row1[0]);
             }
-            return Integer.compare(o2[0], o1[0]);
+            return Integer.compare(row1[col - 1], row2[col - 1]);
         });
         
         int answer = 0;
-        
         for (int i = row_begin - 1; i <= row_end - 1; i++) {
-            int S_i = 0;
-            
-            for (int val : data[i]) {
-                S_i += (val % (i + 1));
-            }
+            int rowNumber = i + 1;
+            int rowSum = calculateRowSum(data[i], rowNumber);
             
             if (i == row_begin - 1) {
-                answer = S_i;
-            } else {
-                answer ^= S_i;
+                answer = rowSum;
+            } else  {
+                answer ^= rowSum;
             }
         }
         
         return answer;
+    }
+    
+    private int calculateRowSum(int[] row, int rowNumber) {
+        int sum = 0;
+        for (int val : row) {
+            sum += (val % rowNumber);
+        }
+        
+        return sum;
     }
 }
