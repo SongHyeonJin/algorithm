@@ -1,71 +1,69 @@
 import java.util.*;
 
 class Solution {
+    private static final int DEFAULT_OUT_TIME = 23 * 60 + 59;
+
     public int[] solution(int[] fees, String[] records) {
-        List<Integer> answer = new ArrayList<>();
-
-        Map<String, Integer> map = new HashMap<>();
-        Map<String, Integer> timeMap = new HashMap<>();
-        ArrayList<String> carNumber = new ArrayList<>();
-
+        Map<String, Integer> inTimeMap = new HashMap<>();
+        Map<String, Integer> totalTimeMap = new HashMap<>();
+        
         for (String record : records) {
-            String[] str = record.split(" ");
-            int time = getRealTime(str[0]);
-            String car = str[1];
-            String type = str[2];
-
-            if (type.equals("IN")) {
-                map.put(car, time);
-            } else if (type.equals("OUT")) {
-                int startTime = map.get(car);
-                map.remove(car);
-                if(timeMap.containsKey(car)) {
-                    int totalTime = timeMap.get(car);
-                    timeMap.put(car, totalTime+time-startTime);
-                } else {
-                    timeMap.put(car, time-startTime);
-                }
+            String[] tokens = record.split(" ");
+            int currentTime = convertToMinutes(tokens[0]);
+            String carNumber = tokens[1];
+            String ioType = tokens[2];
+            
+            if (ioType.equals("IN")) {
+                inTimeMap.put(carNumber, currentTime);
+            } else if (ioType.equals("OUT")) {
+                int startTime = inTimeMap.get(carNumber);
+                inTimeMap.remove(carNumber);
+                
+                int parkingTime = currentTime - startTime;
+                totalTimeMap.put(carNumber, totalTimeMap.getOrDefault(carNumber, 0) + parkingTime);
             }
         }
         
-        for (String s : map.keySet()) {
-            int startTime = map.get(s);
-            int totalTime = 1439;
-            if(timeMap.containsKey(s)) {
-                timeMap.put(s, timeMap.get(s)+totalTime-startTime);
-            } else {
-                timeMap.put(s, totalTime-startTime);
-            }
-        }
-        for (String s : timeMap.keySet()) {
-            carNumber.add(s);
+        for (String carNumber : inTimeMap.keySet()) {
+            int startTime = inTimeMap.get(carNumber);
+            int parkingTime = DEFAULT_OUT_TIME - startTime;
+            
+            totalTimeMap.put(carNumber, totalTimeMap.getOrDefault(carNumber, 0) + parkingTime);
         }
         
-        Collections.sort(carNumber);
-        for(String s : carNumber){
-            int price = pay(fees[0], fees[1], fees[2], fees[3], timeMap.get(s));
-            answer.add(price);
+        List<String> carList = new ArrayList<>(totalTimeMap.keySet());
+        Collections.sort(carList);
+        
+        int[] answer = new int[carList.size()];
+        for (int i = 0; i < carList.size(); i++) {
+            String carNumber = carList.get(i);
+            int totalTime = totalTimeMap.get(carNumber);
+            answer[i] = calculateFee(fees, totalTime);
         }
         
-        return answer.stream().mapToInt(a -> a).toArray();
+        return answer;
     }
-
-    static int pay(int mainTime, int mainFee, int plusTime, int plusFee, int time) {
-        int useTime=0;
-        if(time<=mainTime) return mainFee;
-        else {
-            if((time-mainTime)%plusTime==0 || plusTime==1) {
-                useTime = (time-mainTime)/plusTime;
-            } else {
-                useTime = (time-mainTime)/plusTime+1;
-            }
-            return mainFee+useTime*plusFee;
-        }
-    }
-    static int getRealTime(String time) {
-        String[] tmp = time.split(":");
-        int hour = Integer.parseInt(tmp[0]) * 60;
-        int minute = Integer.parseInt(tmp[1]);
+    
+    private int convertToMinutes(String timeStr) {
+        String[] parts = timeStr.split(":");
+        int hour = Integer.parseInt(parts[0]) * 60;
+        int minute = Integer.parseInt(parts[1]);
         return hour + minute;
+    }
+    
+    private int calculateFee(int[] fees, int totalTime) {
+        int basicTime = fees[0];
+        int basicFee = fees[1];
+        int unitTime = fees[2];
+        int unitFee = fees[3];
+        
+        if (totalTime <= basicTime) {
+            return basicFee;
+        }
+        
+        int excessTime = totalTime - basicTime;
+        int chargedUnits = (excessTime + unitTime - 1) / unitTime;
+        
+        return basicFee + (chargedUnits * unitFee);
     }
 }
