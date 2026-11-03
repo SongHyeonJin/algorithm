@@ -1,28 +1,42 @@
 import java.util.*;
-import java.util.stream.*;
 
 class Solution {
     public int[] solution(String msg) {
+        List<String> dictionary = initDictionary();
         List<Integer> answer = new ArrayList<>();
-        List<String> dic = new ArrayList<>();
         
-        for(int i='A'; i<='Z'; i++) {
-            dic.add(String.valueOf((char)i));
-        }
+        int currentIndex = 0;
         
-        for(int i=0; i<msg.length(); i++) {
-            for(int j=dic.size()-1; j>=0; j--) {
-                if(msg.substring(i).startsWith(dic.get(j))) {
-                    i += dic.get(j).length()-1;
-                    answer.add(j+1);
-                    if(i+1<msg.length()) {
-                        dic.add(dic.get(j)+msg.charAt(i+1));
-                    }
+        while (currentIndex < msg.length()) {
+            String longestWord = "";
+            int longestIndex = -1;
+            
+            for (int i = dictionary.size() - 1; i >= 0; i--) {
+                String word = dictionary.get(i);
+                if (msg.startsWith(word, currentIndex)) {
+                    longestWord = word;
+                    longestIndex = i + 1;
                     break;
                 }
             }
+            
+            answer.add(longestIndex);
+            currentIndex += longestWord.length();
+            
+            if (currentIndex < msg.length()) {
+                char nextChar = msg.charAt(currentIndex);
+                dictionary.add(longestWord + nextChar);
+            }
         }
         
-        return answer.stream().mapToInt(n -> n).toArray();
+        return answer.stream().mapToInt(Integer::intValue).toArray();
+    }
+    
+    private List<String> initDictionary() {
+        List<String> dictionary = new ArrayList<>();
+        for (char c = 'A'; c <= 'Z'; c++) {
+            dictionary.add(String.valueOf(c));
+        }
+        return dictionary;
     }
 }
