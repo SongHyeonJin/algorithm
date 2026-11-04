@@ -1,8 +1,7 @@
 import java.util.*;
 
 class Solution {
-    
-    private static final String[][] PRIORITIES = {
+    private final String[][] PRIORITIES = {
         {"+", "-", "*"},
         {"+", "*", "-"},
         {"-", "+", "*"},
@@ -10,49 +9,48 @@ class Solution {
         {"*", "+", "-"},
         {"*", "-", "+"}
     };
-
+    
     public long solution(String expression) {
         List<String> tokens = new ArrayList<>();
-        StringTokenizer tokenizer = new StringTokenizer(expression, "+-*", true);
-        while (tokenizer.hasMoreTokens()) {
-            tokens.add(tokenizer.nextToken());
+        StringTokenizer st = new StringTokenizer(expression, "+-*", true);
+        while (st.hasMoreTokens()) {
+            tokens.add(st.nextToken());
         }
         
         long maxResult = 0;
-        
         for (String[] priority : PRIORITIES) {
-            List<String> copyList = new ArrayList<>(tokens);
+            List<String> workingList = new LinkedList<>(tokens);
             
-            for (String op : priority) {
-                for (int i = 0; i < copyList.size(); i++) {
-                    if (copyList.get(i).equals(op)) {
-                        long left = Long.parseLong(copyList.get(i - 1));
-                        long right = Long.parseLong(copyList.get(i + 1));
-                        long res = calculate(left, right, op);
+            for (String operation : priority) {
+                for (int i = 0; i < workingList.size(); i++) {
+                    if (workingList.get(i).equals(operation)) {
+                        long leftOperand = Long.parseLong(workingList.get(i - 1));
+                        long rightOperand = Long.parseLong(workingList.get(i + 1));
+                        long calculatedValue = calculate(leftOperand, rightOperand, operation);
                         
-                        copyList.remove(i - 1);
-                        copyList.remove(i - 1);
-                        copyList.remove(i - 1);
-                        copyList.add(i - 1, String.valueOf(res));
+                        workingList.remove(i - 1);
+                        workingList.remove(i - 1);
+                        workingList.remove(i - 1);
+                        workingList.add(i - 1, String.valueOf(calculatedValue));
                         
                         i--;
                     }
                 }
             }
             
-            long finalVal = Math.abs(Long.parseLong(copyList.get(0)));
+            long finalVal = Math.abs(Long.parseLong(workingList.get(0)));
             maxResult = Math.max(maxResult, finalVal);
         }
         
         return maxResult;
     }
     
-    private long calculate(long a, long b, String op) {
-        switch (op) {
-            case "+": return a + b;
-            case "-": return a - b;
-            case "*": return a * b;
-            default: return 0;
+    private long calculate(long a, long b, String operation) {
+        switch (operation) {
+            case "+" : return a + b;
+            case "-" : return a - b;
+            case "*" : return a * b;
+            default : return 0;
         }
     }
 }
