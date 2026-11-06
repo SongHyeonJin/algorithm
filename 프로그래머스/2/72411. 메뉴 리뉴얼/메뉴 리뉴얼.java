@@ -1,48 +1,54 @@
 import java.util.*;
 
 class Solution {
-
-    List<String> answerList = new ArrayList<>();
-    Map<String, Integer> hashMap = new HashMap<>();
-
+    private Map<String, Integer> courseMap;
+    private int maxCount;
+    
     public String[] solution(String[] orders, int[] course) {
+        List<String> answerList = new ArrayList<>();
+        
         for (int i = 0; i < orders.length; i++) {
-            char[] arr = orders[i].toCharArray();
-            Arrays.sort(arr);
-            orders[i] = String.valueOf(arr);
+            char[] menus = orders[i].toCharArray();
+            Arrays.sort(menus);
+            orders[i] = new String(menus);
         }
+        
+        for (int courseSize : course) {
+            courseMap = new HashMap<>();
+            maxCount = 0;
 
-        for (int courseLength : course) {
-            for (String order : orders)
-                combination("", order, courseLength);
+            for (String order : orders) {
+                if (order.length() >= courseSize) {
+                    findCombinations(0, 0, order, new StringBuilder(), courseSize);
+                }
+            }
 
-            if (!hashMap.isEmpty()) {
-                List<Integer> countList = new ArrayList<>(hashMap.values());
-                int max = Collections.max(countList);
-
-                if (max > 1)
-                    for (String key : hashMap.keySet())
-                        if (hashMap.get(key) == max)
-                            answerList.add(key);
-                hashMap.clear();
+            if (maxCount >= 2) {
+                for (String key : courseMap.keySet()) {
+                    if (courseMap.get(key) == maxCount) {
+                        answerList.add(key);
+                    }
+                }
             }
         }
 
         Collections.sort(answerList);
-        String[] answer = new String[answerList.size()];
-        for (int i = 0; i < answer.length; i++)
-            answer[i] = answerList.get(i);
-
-        return answer;
+        return answerList.toArray(new String[0]);
     }
 
-    public void combination(String order, String others, int count) {
-        if (count == 0) {
-            hashMap.put(order, hashMap.getOrDefault(order, 0) + 1);
+    private void findCombinations(int depth, int idx, String order, StringBuilder sb, int courseSize) {
+        if (depth == courseSize) {
+            String course = sb.toString();
+            int count = courseMap.getOrDefault(course, 0) + 1;
+            courseMap.put(course, count);
+            maxCount = Math.max(maxCount, count);
             return;
         }
 
-        for (int i = 0; i < others.length(); i++)
-            combination(order + others.charAt(i), others.substring(i + 1), count - 1);
+        for (int i = idx; i < order.length(); i++) {
+            sb.append(order.charAt(i));
+            findCombinations(depth + 1, i + 1, order, sb, courseSize);
+            sb.deleteCharAt(sb.length() - 1);
+        }
     }
 }
