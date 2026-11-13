@@ -1,52 +1,53 @@
 class Solution {
-    Position left;
-    Position right;
-    Position numPos;
     public String solution(int[] numbers, String hand) {
-        String answer = "";
-        left = new Position(3, 0);
-        right = new Position(3, 2);
+        StringBuilder answer = new StringBuilder();
         
-        for(int num : numbers){
-            numPos = new Position((num-1)/3, (num-1)%3);
-            if(num == 0) numPos = new Position(3, 1);
-            String finger = numPos.getFinger(hand);
-            
-            answer += finger;
-            if(finger.equals("L"))
-                left = numPos;
-            else
-                right = numPos;
-        }
-        return answer;
-    }
-    class Position{
-        int row;
-        int col;
+        int[][] keypad = {
+            {3, 1},
+            {0, 0},
+            {0, 1},
+            {0, 2},
+            {1, 0},
+            {1, 1},
+            {1, 2},
+            {2, 0},
+            {2, 1},
+            {2, 2}
+        };
         
-        public Position(int row, int col){
-            this.row = row;
-            this.col = col;
-        }
+        int[] leftPos = {3, 0};
+        int[] rightPos = {3, 2};
         
-        public String getFinger(String hand){
-            String finger = hand.equals("right")?"R":"L";
-            if(this.col == 0) finger = "L";
-            else if(this.col == 2) finger = "R";
-            else{
-                int leftDistance = left.getDistance(this);
-                int rightDistance = right.getDistance(this);
+        for (int num : numbers) {
+            if (num == 1 || num == 4 || num == 7) {
+                answer.append("L");
+                leftPos = keypad[num];
+            } else if (num == 3 || num == 6 || num == 9) {
+                answer.append("R");
+                rightPos = keypad[num];
+            } else {
+                int[] target = keypad[num];
+                int leftDist = Math.abs(leftPos[0] - target[0]) + Math.abs(leftPos[1] - target[1]);
+                int rightDist = Math.abs(rightPos[0] - target[0]) + Math.abs(rightPos[1] - target[1]);
                 
-                if(leftDistance < rightDistance)
-                    finger = "L";
-                else if(leftDistance > rightDistance)
-                    finger = "R";
-                
+                if (leftDist < rightDist) {
+                    answer.append("L");
+                    leftPos = target;
+                } else if (rightDist < leftDist) {
+                    answer.append("R");
+                    rightPos = target;
+                } else {
+                    if (hand.equals("left")) {
+                        answer.append("L");
+                        leftPos = target;
+                    } else {
+                        answer.append("R");
+                        rightPos = target;
+                    }
                 }
-                return finger;
             }
-        public int getDistance(Position p){
-            return Math.abs(this.row - p.row) + Math.abs(this.col - p.col);
         }
+        
+        return answer.toString();
     }
 }
