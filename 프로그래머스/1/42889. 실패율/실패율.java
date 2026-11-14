@@ -2,44 +2,50 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int N, int[] stages) {
-        int[] answer = new int[N];
-        double[] failRate = new double[N];
-        int player = stages.length;
-        Map<Integer, Integer> fail = new HashMap<>();
         
-        for(int i=1; i<=N; i++)
-            fail.put(i, count(stages, i));
+        List<Stage> stageList = new ArrayList<>();
         
-        int index = 0;
-        for(Integer key : fail.keySet()){
-            failRate[index++] = (double)fail.get(key) / player;
-            
-            if(player == fail.get(key)) player = 1;
-            else player -= fail.get(key);
+        int totalPlayers = stages.length;
+        
+        int[] currentPlayers = new int[N + 2];
+        for (int stage : stages) {
+            currentPlayers[stage]++;
         }
         
-        Double[] temp = new Double[N];
-        for(int i=0; i<N; i++)
-            temp[i] = failRate[i];
+        for (int i = 1; i <= N; i++) {
+            double failureRate = 0.0;
+            
+            if (totalPlayers > 0) {
+                failureRate = (double) currentPlayers[i] / totalPlayers;
+            }
+            
+            stageList.add(new Stage(i, failureRate));
+            
+            totalPlayers -= currentPlayers[i];
+        }
         
-        Arrays.sort(temp, Collections.reverseOrder());
+        stageList.sort((a, b) -> {
+            if (Double.compare(b.rate, a.rate) == 0) {
+                return Integer.compare(a.stageNumber, b.stageNumber);
+            }
+            return Double.compare(b.rate, a.rate);
+        });
         
-        for(int i=0; i<N; i++)
-            for(int j=0; j<N; j++)
-                if(failRate[i] == temp[j]){
-                    if(answer[j] != 0)
-                        continue;
-                    answer[j] = i+1;
-                    break;
-                }    
+        int[] answer = new int[N];
+        for (int i = 0; i < N; i++) {
+            answer[i] = stageList.get(i).stageNumber;
+        }
+        
         return answer;
     }
     
-    static int count(int[] arr, int n){
-        int count = 0;
-        for(int i : arr)
-            if(i == n)
-                count++;
-        return count;
+    private static class Stage {
+        int stageNumber;
+        double rate;
+        
+        public Stage(int stageNumber, double rate) {
+            this.stageNumber = stageNumber;
+            this.rate = rate;
+        }
     }
 }
