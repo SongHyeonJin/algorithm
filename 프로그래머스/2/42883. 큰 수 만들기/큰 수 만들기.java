@@ -1,16 +1,30 @@
+import java.util.*;
+
 class Solution {
     public String solution(String number, int k) {
-        StringBuilder stack = new StringBuilder();
-        int count = k;
+        char[] result = new char[number.length() - k];
+        Stack<Character> stack = new Stack<>();
         
-        for (char num : number.toCharArray()) {
-            while (count > 0 && stack.length() > 0 && stack.charAt(stack.length() - 1) < num) {
-                stack.deleteCharAt(stack.length() - 1);
-                count--;
+        for (int i = 0; i < number.length(); i++) {
+            char c = number.charAt(i);
+            
+            while (!stack.isEmpty() && k > 0 && stack.peek() < c) {
+                stack.pop();
+                k--;
             }
-            stack.append(num);
+            
+            stack.push(c);
         }
         
-        return stack.substring(0, number.length() - k);
+        while (k > 0) {
+            stack.pop();
+            k--;
+        }
+        
+        for (int i = 0; i < result.length; i++) {
+            result[i] = stack.get(i);
+        }
+        
+        return new String(result);
     }
 }
