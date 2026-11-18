@@ -1,15 +1,13 @@
 class Solution {
     public int[] solution(int brown, int yellow) {
-        int totalArea = brown + yellow;
+        int total = brown + yellow;
         
-        for (int height = 3; height <= totalArea; height++) {
-            if (totalArea % height == 0) {
-                int width = totalArea / height;
+        for (int h = 3; h <= Math.sqrt(total); h++) {
+            if (total % h == 0) {
+                int w = total / h;
                 
-                if (width >= height) {
-                    if ((width - 2) * (height - 2) == yellow) {
-                        return new int[]{width, height};
-                    }
+                if ((w - 2) * (h - 2) == yellow) {
+                    return new int[]{w, h};
                 }
             }
         }
