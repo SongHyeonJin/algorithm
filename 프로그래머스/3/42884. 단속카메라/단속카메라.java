@@ -1,23 +1,27 @@
 import java.util.*;
 
-class Solution {   
+class Solution {
     public int solution(int[][] routes) {
-        int answer = 0;
-        
-        Arrays.sort(routes, (o1, o2) -> {
-            return o1[1] - o2[1];
+        Arrays.sort(routes, (a, b) -> {
+            if (a[1] != b[1]) {
+                return Integer.compare(a[1], b[1]);
+            }
+            return Integer.compare(a[0], b[0]);
         });
-        
-        int end = routes[0][1];
-        answer++;
-    
-        for(int i=1; i<routes.length; i++) {
-            if(end < routes[i][0]) {
-                end = routes[i][1];
-                answer++;
+
+        int cameras = 0;
+        int lastCameraPos = -30001;
+
+        for (int[] route : routes) {
+            int start = route[0];
+            int end = route[1];
+
+            if (lastCameraPos < start) {
+                cameras++;
+                lastCameraPos = end;
             }
         }
-        
-        return answer;
+
+        return cameras;
     }
 }
